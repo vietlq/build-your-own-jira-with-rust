@@ -3,9 +3,9 @@ mod traits {
 
     /// You might have noticed that in the test for the previous koan we haven't checked if
     /// the status returned by `.status()` matched the status we passed to `create_ticket`.
-    /// 
+    ///
     /// That's because `assert_eq!(ticket.status(), Status::ToDo)` would have failed to compiled:
-    /// 
+    ///
     /// error[E0369]: binary operation `==` cannot be applied to type `&path_to_enlightenment::visibility::ticket::Status`
     ///    --> jira-wip/src/koans/01_ticket/05_ownership.rs:128:13
     ///    |
@@ -19,10 +19,10 @@ mod traits {
     ///
     /// `assert_eq` requires that its arguments implement the `PartialEq` trait.
     /// What is a trait?
-    /// Traits in Rust are very similar to interfaces in other programming languages: 
+    /// Traits in Rust are very similar to interfaces in other programming languages:
     /// a trait describes a behaviour/capability.
     /// For example:
-    /// 
+    ///
     /// ```
     /// pub trait Pay {
     ///     fn pay(self, amount: u64, currency: String) -> u64
@@ -32,7 +32,7 @@ mod traits {
     /// In practical terms, a trait defines the signature of a collection of methods.
     /// To implement a trait, a struct or an enum have to implement those methods
     /// in an `impl Trait` block:
-    /// 
+    ///
     /// ```
     /// impl Pay for TaxPayer {
     ///     fn pay(self, amount: u64, currency: String) -> u64 {
@@ -40,7 +40,7 @@ mod traits {
     ///     }
     /// }
     /// ```
-    /// 
+    ///
     /// `PartialEq` is the trait that powers the == operator.
     /// Its definition looks something like this (simplified):
     /// ```
@@ -50,14 +50,21 @@ mod traits {
     /// ```
     /// It's slightly more complicated, with generic parameters, to allow comparing different types.
     /// But let's roll with this simplified version for now.
-    /// 
+    ///
     /// Let's implement it for Status!
     impl PartialEq for Status {
         fn eq(&self, other: &Status) -> bool {
             // If you need to refresh the `match` syntax, checkout
             // https://doc.rust-lang.org/book/ch06-02-match.html
             match (self, other) {
-                __
+                (Status::ToDo, Status::ToDo)
+                | (Status::Done, Status::Done)
+                | (Status::InProgress, Status::InProgress)
+                | (Status::Blocked, Status::Blocked) => true,
+                (Status::ToDo, _)
+                | (Status::Done, _)
+                | (Status::InProgress, _)
+                | (Status::Blocked, _) => false,
             }
         }
     }
