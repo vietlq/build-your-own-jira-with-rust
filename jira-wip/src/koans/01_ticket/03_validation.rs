@@ -33,7 +33,10 @@ mod validation {
         }
 
         if title.len() > MAX_TITLE_LEN {
-            panic!("The description cannot be longer than {} characters!", MAX_TITLE_LEN)
+            panic!(
+                "The description cannot be longer than {} characters!",
+                MAX_TITLE_LEN
+            )
         }
 
         if description.is_empty() {
@@ -41,7 +44,10 @@ mod validation {
         }
 
         if description.len() > MAX_DESC_LEN {
-            panic!("The description cannot be longer than {} characters!", MAX_DESC_LEN)
+            panic!(
+                "The description cannot be longer than {} characters!",
+                MAX_DESC_LEN
+            )
         }
 
         Ticket {

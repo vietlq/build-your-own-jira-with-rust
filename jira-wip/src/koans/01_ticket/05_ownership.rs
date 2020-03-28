@@ -1,9 +1,9 @@
 mod ownership {
     /// Using modules and visibility modifiers we have now fully encapsulated the fields of our Ticket.
     /// There is no way to create a Ticket instance skipping our validation.
-    /// At the same time though, we have made it impossible to access the fields of our struct, 
+    /// At the same time though, we have made it impossible to access the fields of our struct,
     /// because they are private!
-    /// 
+    ///
     /// Let's fix that introducing a bunch of accessor methods providing **read-only** access
     /// to the fields in a ticket.
 
@@ -16,13 +16,13 @@ mod ownership {
     pub struct Ticket {
         title: String,
         description: String,
-        status: Status
+        status: Status,
     }
 
     /// Methods on a struct are defined in `impl` blocks.
     impl Ticket {
         /// The syntax looks very similar to the syntax to define functions.
-        /// There is only one peculiarity: if you want to access the struct in a method, 
+        /// There is only one peculiarity: if you want to access the struct in a method,
         /// you need to take `self` as your first parameter in the method signature.
         ///
         /// You have three options, depending on what you are trying to accomplish:
@@ -32,7 +32,7 @@ mod ownership {
         ///
         /// We are now touching for the first time the topic of ownership, enforced by
         /// the compiler via the (in)famous borrow-checker.
-        /// 
+        ///
         /// In Rust, each value has an owner, statically determined at compile-time.
         /// There is only one owner for each value at any given time.
         /// Tracking ownership at compile-time is what makes it possible for Rust not to have
@@ -45,17 +45,17 @@ mod ownership {
         /// It can lend many immutable references (`&a`) to that value to other functions or variables.
         /// It can lend a **single** mutable reference (`&mut a`) to that value to another
         /// function or variable.
-        /// 
+        ///
         /// What can you do with a shared immutable reference (`&a`) to a value?
         /// You can read the value and create more immutable references.
-        /// 
+        ///
         /// What can you do with a single mutable reference (`&mut a`) to a value?
         /// You can mutate the underlying value.
         ///
         /// Ownership is embedded in the type system: each function has to declare in its signature
         /// what kind of ownership level it requires for all its arguments.
         /// If the caller cannot fulfill those requirements, they cannot call the function.
-        /// 
+        ///
         /// In our case, we only need to read a field of our Ticket struct: it will be enough to ask
         /// for an immutable reference to our struct.
         ///
@@ -76,12 +76,12 @@ mod ownership {
         /// Replace __ with the proper types to get accessor methods for the other two fields.
         /// If you are asking yourself why we are returning &str instead of &String, check out:
         /// https://blog.thoughtram.io/string-vs-str-in-rust/
-        pub fn description(__) -> __ {
-           todo!()
+        pub fn description(&self) -> &String {
+            &self.description
         }
 
-        pub fn status(__) -> __ {
-           todo!()
+        pub fn status(&self) -> &Status {
+            &self.status
         }
     }
 
@@ -105,11 +105,12 @@ mod ownership {
 
     #[cfg(test)]
     mod tests {
-        use super::{create_ticket, Ticket};
         use super::super::visibility::ticket::Status;
+        use super::{create_ticket, Ticket};
 
         fn verify_without_tampering() {
-            let ticket: Ticket = create_ticket("A title".into(), "A description".into(), Status::ToDo);
+            let ticket: Ticket =
+                create_ticket("A title".into(), "A description".into(), Status::ToDo);
 
             /// Instead of accessing the field `ticket.description` we are calling the accessor
             /// method, `ticket.description()`, which returns us a reference to the field value

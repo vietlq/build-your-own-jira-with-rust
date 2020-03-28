@@ -4,3 +4,4 @@ include!("koans/01_ticket/02_status.rs");
 include!("koans/01_ticket/03_validation.rs");
 include!("koans/01_ticket/04_visibility.rs");
 include!("koans/01_ticket/05_ownership.rs");
+include!("koans/01_ticket/06_traits.rs");
