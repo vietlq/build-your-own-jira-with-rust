@@ -56,8 +56,8 @@ mod id_generation {
             self.data.get(id)
         }
 
-        fn generate_id(__) -> TicketId {
-           todo!()
+        fn generate_id(&self) -> TicketId {
+           (self.data.len() + 1) as u32
         }
     }
 
