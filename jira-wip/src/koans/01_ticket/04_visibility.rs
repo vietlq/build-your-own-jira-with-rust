@@ -21,20 +21,20 @@ mod visibility {
         /// the struct (e.g. `create_ticket` can create a `Ticket` by specifying its fields).
         /// Outside of the module, those fields are inaccessible because they are considered
         /// private by default, unless prefixed with pub.
-        enum Status {
+        pub enum Status {
             ToDo,
             InProgress,
             Blocked,
             Done,
         }
 
-        struct Ticket {
+        pub struct Ticket {
             title: String,
             description: String,
             status: Status,
         }
 
-        fn create_ticket(title: String, description: String, status: Status) -> Ticket {
+        pub fn create_ticket(title: String, description: String, status: Status) -> Ticket {
             if title.is_empty() {
                 panic!("Title cannot be empty!");
             }
@@ -78,7 +78,7 @@ mod visibility {
             //
             // Once you have verified that the below does not compile,
             // comment the line out to move on to the next koan!
-            assert_eq!(ticket.description, "A description");
+            //assert_eq!(ticket.description, "A description");
         }
 
         fn encapsulation_cannot_be_violated() {
@@ -91,11 +91,7 @@ mod visibility {
             //
             // Once you have verified that the below does not compile,
             // comment the lines out to move on to the next koan!
-            let ticket = Ticket {
-                title: "A title".into(),
-                description: "A description".into(),
-                status: Status::ToDo,
-            };
+            let ticket = create_ticket("A title".into(), "A description".into(), Status::ToDo);
         }
     }
 }
