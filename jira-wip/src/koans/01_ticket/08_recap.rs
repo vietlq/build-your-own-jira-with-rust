@@ -5,7 +5,7 @@ mod recap {
     ///
     /// Then get ready to dive in the next section!
 
-    #[derive(PartialEq, Debug)]
+    #[derive(PartialEq, Debug, Clone)]
     pub enum Status {
         ToDo,
         InProgress,
@@ -13,6 +13,7 @@ mod recap {
         Done,
     }
 
+    #[derive(PartialEq, Debug, Clone)]
     pub struct Ticket {
         title: String,
         description: String,
@@ -31,6 +32,16 @@ mod recap {
         pub fn status(&self) -> &Status {
             &self.status
         }
+
+        /*
+        pub fn clone(&self) -> Ticket {
+            Ticket {
+                title: self.title.clone(),
+                description: self.description.clone(),
+                status: self.status.clone(),
+            }
+        }
+        */
     }
 
     pub fn create_ticket(title: String, description: String, status: Status) -> Ticket {

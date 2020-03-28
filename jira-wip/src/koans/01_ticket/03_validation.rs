@@ -25,17 +25,17 @@ mod validation {
     /// We will learn a better way to handle recoverable errors such as this one further along,
     /// but let's rely on panic for the time being.
     fn create_ticket(title: String, description: String, status: Status) -> Ticket {
-        let MAX_TITLE_LEN = 50;
-        let MAX_DESC_LEN = 3000;
+        let k_max_title_len = 50;
+        let k_max_desc_len = 3000;
 
         if title.is_empty() {
             panic!("The title must not be empty!");
         }
 
-        if title.len() > MAX_TITLE_LEN {
+        if title.len() > k_max_title_len {
             panic!(
                 "The description cannot be longer than {} characters!",
-                MAX_TITLE_LEN
+                k_max_title_len
             )
         }
 
@@ -43,10 +43,10 @@ mod validation {
             panic!("The description must not be empty!");
         }
 
-        if description.len() > MAX_DESC_LEN {
+        if description.len() > k_max_desc_len {
             panic!(
                 "The description cannot be longer than {} characters!",
-                MAX_DESC_LEN
+                k_max_desc_len
             )
         }
 
