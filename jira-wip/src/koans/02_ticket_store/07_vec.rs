@@ -44,7 +44,7 @@ mod vec {
         /// The Rust documentation for `HashMap` will also be handy:
         /// https://doc.rust-lang.org/std/collections/struct.HashMap.html
         pub fn list(&self) -> Vec<&Ticket> {
-           todo!()
+            self.data.values().map(|v| v).collect()
         }
 
         fn generate_id(&mut self) -> TicketId {
