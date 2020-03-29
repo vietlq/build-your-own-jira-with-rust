@@ -167,6 +167,7 @@ pub mod store_recap {
         Done,
     }
 
+    // https://stackoverflow.com/questions/49113368/how-do-i-fix-cannot-find-derive-macro-in-this-scope
     #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
     pub struct Ticket {
         id: TicketId,

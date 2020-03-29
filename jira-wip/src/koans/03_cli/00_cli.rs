@@ -24,11 +24,14 @@
 /// When you are ready, uncomment the appropriate lines from src/main.rs and
 /// run `cargo run --bin jira-wip` in your terminal!
 pub mod cli {
-    use super::store_recap::{TicketStore, Status, TicketDraft, TicketPatch, TicketTitle, TicketDescription, ValidationError};
     use super::id_generation::TicketId;
+    use super::store_recap::{
+        Status, TicketDescription, TicketDraft, TicketPatch, TicketStore, TicketTitle,
+        ValidationError,
+    };
     use std::error::Error;
-    use std::str::FromStr;
     use std::fmt::Formatter;
+    use std::str::FromStr;
 
     #[derive(structopt::StructOpt, Clone)]
     /// A small command-line interface to interact with a toy Jira clone, IronJira.
@@ -81,7 +84,7 @@ pub mod cli {
                 "InProgress" => Ok(Status::InProgress),
                 "Done" => Ok(Status::Done),
                 "Blocked" => Ok(Status::Blocked),
-                _ => Err(ParsingError(String::from("Invalid status string!")))
+                _ => Err(ParsingError(String::from("Invalid status string!"))),
             }
         }
     }
@@ -106,7 +109,7 @@ pub mod cli {
     #[derive(Debug)]
     pub struct ParsingError(String);
 
-    impl Error for ParsingError { }
+    impl Error for ParsingError {}
 
     impl std::fmt::Display for ParsingError {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
@@ -123,10 +126,15 @@ pub mod cli {
     /// touching in this workshop.
     /// Check its section in the Rust book if you are curious:
     /// https://doc.rust-lang.org/book/ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types
-    pub fn handle_command(ticket_store: &mut TicketStore, command: Command) -> Result<(), Box<dyn Error>> {
+    pub fn handle_command(
+        ticket_store: &mut TicketStore,
+        command: Command,
+    ) -> Result<(), Box<dyn Error>> {
         match command {
             Command::Create { description, title } => {
-                todo!()
+                let draft = TicketDraft { title, description };
+                let id = ticket_store.save(draft);
+                println!("The ticket was saved with the id {}", id)
             }
             Command::Edit {
                 id,
@@ -134,7 +142,15 @@ pub mod cli {
                 description,
                 status,
             } => {
-                todo!()
+                let patch = TicketPatch {
+                    title,
+                    description,
+                    status,
+                };
+                match ticket_store.update(&id, patch) {
+                    Some(_) => println!("The ticket id {} was updated", id),
+                    None => println!("Could not find the ticket id {}", id),
+                }
             }
             Command::Delete { ticket_id } => match ticket_store.delete(&ticket_id) {
                 Some(deleted_ticket) => println!(
@@ -147,7 +163,9 @@ pub mod cli {
                 ),
             },
             Command::List => {
-                todo!()
+                for ticket in ticket_store.list() {
+                    println!("{:?}", ticket);
+                }
             }
         }
         Ok(())
@@ -158,8 +176,7 @@ pub mod cli {
         use super::*;
 
         #[test]
-        fn invalid_status_fails_to_be_parsed()
-        {
+        fn invalid_status_fails_to_be_parsed() {
             let invalid_status = "Not a good status";
             assert!(Status::from_str(invalid_status).is_err());
         }
