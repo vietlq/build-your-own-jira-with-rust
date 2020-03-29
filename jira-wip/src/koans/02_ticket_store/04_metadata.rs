@@ -30,8 +30,10 @@ mod metadata {
             }
         }
 
-        pub fn save(&mut self, ticket: Ticket) -> TicketId {
+        pub fn save(&mut self, mut ticket: Ticket) -> TicketId {
             let id = self.generate_id();
+            &mut ticket.set_id(id);
+            &mut ticket.set_saved_at(Utc::now());
             self.data.insert(id, ticket);
             id
         }
@@ -51,6 +53,8 @@ mod metadata {
         title: String,
         description: String,
         status: Status,
+        saved_at: Option<DateTime<Utc>>,
+        id: Option<TicketId>,
     }
 
     impl Ticket {
@@ -66,14 +70,28 @@ mod metadata {
             &self.status
         }
 
+        pub fn set_saved_at(&mut self, saved_at: DateTime<Utc>) {
+            self.saved_at = Some(saved_at);
+        }
+
+        pub fn set_id(&mut self, id: TicketId) {
+            self.id = Some(id);
+        }
+
         // The datetime when the ticket was saved in the store, if it was saved.
-        pub fn created_at(&self) -> __ {
-           todo!()
+        pub fn created_at(&self) -> Option<&DateTime<Utc>> {
+            match &self.saved_at {
+                Some(v) => Some(&v),
+                None => None,
+            }
         }
 
         // The id associated with the ticket when it was saved in the store, if it was saved.
-        pub fn id(&self) -> __ {
-           todo!()
+        pub fn id(&self) -> Option<&TicketId> {
+            match &self.id {
+                Some(v) => Some(&v),
+                None => None,
+            }
         }
     }
 
@@ -88,10 +106,15 @@ mod metadata {
             panic!("A description cannot be longer than 3000 characters!");
         }
 
+        let id = None;
+        let saved_at = None;
+
         Ticket {
             title,
             description,
             status,
+            saved_at,
+            id,
         }
     }
 
