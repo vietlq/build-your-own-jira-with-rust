@@ -24,7 +24,7 @@
 /// When you are ready, uncomment the appropriate lines from src/main.rs and
 /// run `cargo run --bin jira-wip` in your terminal!
 pub mod cli {
-    use super::store_recap::{TicketStore, Status, TicketDraft, TicketPatch, TicketTitle, TicketDescription};
+    use super::store_recap::{TicketStore, Status, TicketDraft, TicketPatch, TicketTitle, TicketDescription, ValidationError};
     use super::id_generation::TicketId;
     use std::error::Error;
     use std::str::FromStr;
@@ -35,7 +35,12 @@ pub mod cli {
     pub enum Command {
         /// Create a ticket on your board.
         Create {
-            __
+            // Description of the ticket.
+            #[structopt(long)]
+            description: TicketDescription,
+            // Title of the ticket.
+            #[structopt(long)]
+            title: TicketTitle,
         },
         /// Edit the details of an existing ticket.
         Edit {
@@ -54,7 +59,9 @@ pub mod cli {
         },
         /// Delete a ticket from the store passing the ticket id.
         Delete {
-            __
+            /// Id of the ticket you want to delete.
+            #[structopt(long)]
+            ticket_id: TicketId,
         },
         /// List all existing tickets.
         List,
@@ -69,16 +76,30 @@ pub mod cli {
         type Err = ParsingError;
 
         fn from_str(s: &str) -> Result<Self, Self::Err> {
-            __
+            match s {
+                "ToDo" => Ok(Status::ToDo),
+                "InProgress" => Ok(Status::InProgress),
+                "Done" => Ok(Status::Done),
+                "Blocked" => Ok(Status::Blocked),
+                _ => Err(ParsingError(String::from("Invalid status string!")))
+            }
         }
     }
 
     impl FromStr for TicketTitle {
-        __
+        type Err = ValidationError;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            TicketTitle::new(String::from(s))
+        }
     }
 
     impl FromStr for TicketDescription {
-        __
+        type Err = ValidationError;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            TicketDescription::new(String::from(s))
+        }
     }
 
     /// Our error struct for parsing failures.
